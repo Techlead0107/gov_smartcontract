@@ -5,10 +5,7 @@ const { ethers, upgrades} = require("hardhat");
 const { VESTING_SCHEDULE } = require("./utilities/utilities");
 const fs = require('fs');
 
-/**
- * Make sure the contract start date for testing is set to 01/01/2022 00:00:00
- * You can do this in the getListingTime function
- */
+
 
 chai.use(solidity);
 
