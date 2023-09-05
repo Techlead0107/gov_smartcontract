@@ -241,6 +241,35 @@ contract ClaimBoard is Ownable {
         emit AllocationAdded(wallet,totalAmount);
     }
 
+    function removeVestingWallet(
+        address wallet,
+        uint256 totalAmount,
+        uint256 monthAmount,
+        uint256 cliff,
+        uint256 vestingTypeIndex
+    ) internal {
+
+        require(
+            vestingWallets[vestingTypeIndex][wallet].totalAmount == 0,
+            "Vesting wallet already removed for this address and type"
+        );
+
+        uint256 releaseTime = getListingTime();
+
+        // Create vesting wallets
+        VestingWallet memory vestingWallet =
+            VestingWallet(
+                wallet,
+                totalAmount,
+                monthAmount,
+                releaseTime+cliff,
+                cliff
+            );
+
+        vestingWallets[vestingTypeIndex][wallet] = vestingWallet;
+        emit AllocationAdded(wallet,totalAmount);
+    }
+
     function getTimestamp() external view returns (uint256) {
         return block.timestamp;
     }
