@@ -6,7 +6,6 @@ const { VESTING_SCHEDULE } = require("./utilities/utilities");
 const fs = require('fs');
 
 
-
 chai.use(solidity);
 
 describe("Vesting", function() {
