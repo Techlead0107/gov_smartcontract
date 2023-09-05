@@ -5,10 +5,7 @@ const { ethers, upgrades} = require("hardhat");
 const { VESTING_SCHEDULE } = require("./utilities/utilities");
 const fs = require('fs');
 
-/**
- * Make sure the contract start date for testing is set to 01/01/2022 00:00:00
- * You can do this in the getListingTime function
- */
+
 
 chai.use(solidity);
 
@@ -126,10 +123,6 @@ describe("Vesting", function() {
                     let expectedAmount = 0;
         
                     if(
-                        //ignoring non linear
-                        // VESTING_SCHEDULE[i].name != '1: Seed'&&
-                        // VESTING_SCHEDULE[i].name != '3: Private'&&
-                        // VESTING_SCHEDULE[i].name != '2: Strategic'
                         true
                     )
                     {
@@ -154,13 +147,13 @@ describe("Vesting", function() {
                         for(let u = 0 ; u < addrs.length ; u++){
                             vested+=parseFloat(ethers.utils.formatUnits(await mc.getUnlockedVestingAmountByType(addrs[u],i), tokenDecimals));
                         }
-                        writeString+=`\nVesging Type\t\t:  ${VESTING_SCHEDULE[i].name}`;
-                        writeString+=`\nMonrhs Vested\t\t:  ${monthsVested}`;
-                        writeString+=`\nLock Period\t\t:  ${VESTING_SCHEDULE[i].lock}`;
                         writeString+=`\nTotal Months\t\t:  ${VESTING_SCHEDULE[i].vesting/30}`;
                         writeString+=`\nOne Month Amount\t:  ${currentOneMonthVesting}`;
                         writeString+=`\nexpectedAmount\t\t:  ${expectedAmount}\n`;
                         writeString+=`\nVsted\t\t\t:  ${vested}\n`
+                        writeString+=`\nVesging Type\t\t:  ${VESTING_SCHEDULE[i].name}`;
+                        writeString+=`\nMonrhs Vested\t\t:  ${monthsVested}`;
+                        writeString+=`\nLock Period\t\t:  ${VESTING_SCHEDULE[i].lock}`;
                         if(VESTING_SCHEDULE[i].nonLinear == false)
                             expect(vested.toFixed(0)).to.eq(expectedAmount.toFixed(0));
                     }    
