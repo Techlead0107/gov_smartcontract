@@ -254,15 +254,12 @@ contract ClaimBoard is Ownable {
             "Vesting wallet already removed for this address and type"
         );
 
-        uint256 releaseTime = getListingTime();
-
         // Create vesting wallets
         VestingWallet memory vestingWallet =
             VestingWallet(
                 wallet,
                 totalAmount,
                 monthAmount,
-                releaseTime+cliff,
                 cliff
             );
 
