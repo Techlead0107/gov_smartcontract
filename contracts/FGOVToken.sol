@@ -26,7 +26,7 @@ contract FGOVToken is Context, IERC20, IERC20Metadata, Ownable {
     //Recommended code by 0xBull
     BPContract public BP;
     bool public bpEnabled;
-    bool public BPDisabledForever = false;
+    bool public BPDisabledForever;
 
     /**
      * @dev Sets the values for {name} and {symbol}.
