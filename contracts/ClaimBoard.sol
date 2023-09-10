@@ -20,7 +20,7 @@ struct VestingType {
     uint256 monthlyRate;
     uint256 cliff;
     bool nonLinear;
-    uint256 percent; //allocation percentage out of total supply  * 100  for 2 decimals im percentage
+    uint256 percent; //allocation percentage out of total supply  * 100  for 2 decimals in percentage
     uint256 totalAllocated;
 }
 import "@openzeppelin/contracts/access/Ownable.sol";
@@ -31,7 +31,7 @@ contract ClaimBoard is Ownable {
     IERC20 govToken;
     mapping(uint => mapping(address => VestingWallet)) public vestingWallets;
     VestingType[] public vestingTypes;
-    uint256 public totalAllocations = 0;
+    uint256 public totalAllocations;
 
     uint256 public constant PRECISION = 1e18;
     uint256 public constant ONE_HUNDRED_PERCENT = PRECISION * 100;
@@ -155,7 +155,7 @@ contract ClaimBoard is Ownable {
         vestingTypes.push(VestingType(2777777777777777700, 4 days, false,1000,0));
     }
 
-    // Vested tokens wont be available before the listing time
+    // Vested tokens won't be available before the listing time
     function getListingTime() public pure returns (uint256) {
         return 1639094400;//Tue Dec 07 2021 00:00:00 GMT+0000
     }
@@ -179,16 +179,16 @@ contract ClaimBoard is Ownable {
         );
         require(
             vestingTypeIndex < vestingTypes.length,
-            "Vesting type isnt found"
+            "Vesting type isn't found"
         );
-        for(uint256 i = 0 ; i < totalAmounts.length ; i++){
+        for(uint256 i; i < totalAmounts.length ; i++){
             vestingTypes[vestingTypeIndex].totalAllocated += totalAmounts[i];
         }
         require(vestingTypes[vestingTypeIndex].totalAllocated
-                <= (govToken.totalSupply()*vestingTypes[vestingTypeIndex].percent)/10000,"Can not allocate more then round limit");
+                <= (govToken.totalSupply()*vestingTypes[vestingTypeIndex].percent)/10000,"Can not allocate more than round limit");
         VestingType memory vestingType = vestingTypes[vestingTypeIndex];
         uint256 addressesLength = addresses.length;
-        for (uint256 i = 0; i < addressesLength; i++) {
+        for (uint256 i; i < addressesLength; i++) {
             address _address = addresses[i];
             uint256 totalAmount = totalAmounts[i];
             // We add 1 to round up, this prevents small amounts from never vesting
@@ -312,10 +312,10 @@ contract ClaimBoard is Ownable {
         require(vestingTypeIndex == 1 || vestingTypeIndex == 2 || vestingTypeIndex == 3 || vestingTypeIndex == 4, "Invalid vesting type");
         
 
-        uint256 unlocked = 0;
-        uint256 _days_remainder = 0;
+        uint256 unlocked;
+        uint256 _days_remainder;
         uint256[][] memory _nonLinearUnlocks  = nonLinearUnlocks[vestingTypeIndex];
-        for (uint256 i = 0; i < _nonLinearUnlocks.length; i++) {
+        for (uint256 i; i < _nonLinearUnlocks.length; i++) {
             if (_days <= _days_remainder) break;
 
             if (_days-_days_remainder >= _nonLinearUnlocks[i][1]) {
@@ -355,7 +355,7 @@ contract ClaimBoard is Ownable {
             return 0;
         }
 
-        uint256 transferableAmountNow = 0;
+        uint256 transferableAmountNow;
         //fetch number of days of vesting
         uint256 trueMonths = this.getMonthsOrDays(vestingWallets[vestingType][sender].cliff, true);
         if (vestingTypes[vestingType].nonLinear == true) {
@@ -384,9 +384,9 @@ contract ClaimBoard is Ownable {
         view
         returns (uint256)
     {
-        uint256 totalAmount = 0;
-        uint256 totalDailyTransferableAmount = 0;
-        for(uint256 i = 0; i < vestingTypes.length;  i++){
+        uint256 totalAmount;
+        uint256 totalDailyTransferableAmount;
+        for(uint256 i; i < vestingTypes.length;  i++){
             totalAmount+= vestingWallets[i][sender].totalAmount;
             totalDailyTransferableAmount = totalDailyTransferableAmount + this.getUnlockedVestingAmountByType(sender,i);
         }
@@ -401,8 +401,8 @@ contract ClaimBoard is Ownable {
      * @param sender a vesting wallet.
      */    
      function getRestAmount(address sender) external view returns (uint256) {
-        uint256 totalAmount = 0;
-        for(uint256 i = 0; i < vestingTypes.length;  i++){
+        uint256 totalAmount;
+        for(uint256 i; i < vestingTypes.length;  i++){
             totalAmount += vestingWallets[i][sender].totalAmount;
         }
         return totalAmount - this.getUnlockedVestingAmount(sender);
@@ -427,9 +427,9 @@ contract ClaimBoard is Ownable {
         returns (bool)
     {
         // Treat as a normal coin if this is not a vested wallet
-        uint256 totalAmount = 0;
-        bool isStart = false;
-        for(uint256 i = 0; i < vestingTypes.length; i++){
+        uint256 totalAmount;
+        bool isStart;
+        for(uint256 i; i < vestingTypes.length; i++){
             totalAmount = totalAmount + vestingWallets[i][sender].totalAmount;
             if (
                 this.isStarted(vestingWallets[i][sender].startDay)
